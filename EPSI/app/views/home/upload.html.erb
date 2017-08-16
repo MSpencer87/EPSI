@@ -1,0 +1,197 @@
+<style>
+
+
+#texts {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	text-shadow: 1px 1px #999;	
+	color: #32cd32;
+}
+
+#boxes {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  color: #000000;
+  font-size: 60%;
+}
+
+#rcorners2 {
+    border-radius: 25px;
+    border: 3px solid #32cd32;
+    padding: 20px; 
+    box-shadow: 5px 5px 5px #999;
+}
+
+#spacer {
+  padding: 10px 10px 10px 10px;
+  display: inline-block;
+  vertical-align: center;
+
+}
+</style>
+
+<% path = Rails.root.join('public', "#{@filename}") %>
+<% @packet_array = PacketFu::PcapFile.file_to_array(path) %>
+
+<% hosts = Array.new %>
+<% usage = Array.new %>
+<% types = Array.new %>
+<% counts = Array.new %>
+<% unknwn = 0 %>
+<% total = 0 %>
+
+
+<% @packet_array.each do |pkt| %>
+	<% total = total + 1 %>
+	<% @packet = PacketFu::Packet.parse(pkt) %>
+	<% if(@packet.class != InvalidPacket) %>
+		<% if types.include?(@packet.proto.last) %>
+			<% type_index = types.index(@packet.proto.last) %>
+			<% counts[type_index] = counts[type_index] + 1 %>
+		<% else %>
+			<% types.push(@packet.proto.last) %>
+			<% counts.push(1) %>
+		<% end %>
+		<% if @packet.is_ip? %>
+			<% if hosts.include?(@packet.eth_daddr) %>
+				<% host_index = hosts.index(@packet.eth_daddr) %>
+				<% usage[host_index] = usage[host_index].to_i + @packet.size.to_i %>
+			<% else %>
+				<% hosts.push(@packet.eth_daddr) %>
+				<% sum = @packet.size.to_i %>
+				<% usage.push(sum) %>
+			<% end %>
+		<% else %>
+			<% if hosts.include?(@packet.eth_daddr) %>
+				<% host_index = hosts.index(@packet.eth_daddr) %>
+				<% usage[host_index] = usage[host_index].to_i + @packet.size.to_i %>
+			<% else %>
+				<% hosts.push(@packet.eth_daddr) %>
+				<% sum = @packet.size.to_i %>
+				<% usage.push(sum) %>
+			<% end %>
+		<% end %>
+	<% else %>
+		<% unknwn = unknwn + 1 %>
+		<% sniff = @packet.peek %>
+		<% packet_src = [sniff[20..21], sniff[22..23], sniff[24..25], sniff[26..27], sniff[28..29], sniff[30..31]] %>
+		<% packet_dst = [sniff[8..9], sniff[10..11], sniff[12..13], sniff[14..15], sniff[16..17], sniff[18..19]] %>
+
+		<% if types.include?(sniff[0])%>
+			<% type_index = types.index(sniff[0]) %>
+			<% counts[type_index] = counts[type_index] + 1 %>
+		<% else %>
+			<% types.push(sniff[0]) %>
+			<% counts.push(1) %>
+		<% end %>
+
+		<% if hosts.include?(packet_dst.join(":")) %>
+			<% host_index = hosts.index(packet_dst.join(":")) %>
+			<% usage[host_index] = usage[host_index].to_i + @packet.size.to_i %>
+		<% else %>
+			<% hosts.push(packet_dst.join(":")) %>
+			<% sum = @packet.size.to_i %>
+			<% usage.push(sum) %>
+		<% end %>
+	<% end %>
+<% end %>
+
+<% hosts_s = Array.new %>
+<% usage_s = Array.new %>
+
+<% @packet_array.each do |pkt| %>
+	<% @packet = PacketFu::Packet.parse(pkt) %>
+	<% if(@packet.class != InvalidPacket) %>
+		<% if @packet.is_ip? %>
+			<% if hosts_s.include?(@packet.eth_saddr) %>
+				<% host_index = hosts_s.index(@packet.eth_saddr) %>
+				<% usage_s[host_index] = usage_s[host_index].to_i + @packet.size.to_i %>
+			<% else %>
+				<% hosts_s.push(@packet.eth_saddr) %>
+				<% host_index = hosts_s.index(@packet.eth_saddr) %>
+				<% sum = @packet.size.to_i %>
+				<% usage_s.push(sum) %>
+			<% end %>
+		<% else %>
+			<% if hosts_s.include?(@packet.eth_saddr) %>
+				<% host_index = hosts_s.index(@packet.eth_saddr) %>
+				<% usage_s[host_index] = usage_s[host_index].to_i + @packet.size.to_i %>
+			<% else %>
+				<% hosts_s.push(@packet.eth_saddr) %>
+				<% host_index = hosts_s.index(@packet.eth_saddr) %>
+				<% sum = @packet.size.to_i %>
+				<% usage_s.push(sum) %>
+			<% end %>
+		<% end %>
+	<% else %>
+		<% sniff = @packet.peek %>
+		<% packet_src = [sniff[20..21], sniff[22..23], sniff[24..25], sniff[26..27], sniff[28..29], sniff[30..31]] %>
+		<% packet_dst = [sniff[8..9], sniff[10..11], sniff[12..13], sniff[14..15], sniff[16..17], sniff[18..19]] %>
+
+		<% if hosts_s.include?(packet_src.join(":")) %>
+			<% host_index = hosts_s.index(packet_src.join(":")) %>
+			<% usage_s[host_index] = usage_s[host_index].to_i + @packet.size.to_i %>
+		<% else %>
+			<% hosts_s.push(packet_src.join(":")) %>
+			<% host_index = hosts_s.index(packet_src.join(":")) %>
+			<% sum = @packet.size.to_i %>
+			<% usage_s.push(sum) %>
+		<% end %>
+	<% end %>
+<% end %>
+
+<% require 'mac_vendor' %>
+
+<%# hosts.each do |e| %>
+	<%# name = %x[curl https://mac-to-vendor.herokuapp.com/#{e}] %>
+	<%# if name.to_s != "unkown" %>
+		<%# host_index = hosts.index(e) %>
+		<%# hosts[host_index.to_i] = name %>
+	<%# end %>
+<%# end %>
+
+<%# chill = 1 %>
+<%# hosts_s.each do |e| %>
+	<%# name = %x[curl https://mac-to-vendor.herokuapp.com/#{e}] %>
+	<%# if name != "unknown" %>
+		<%#= chill %> <%#chill = chill + 1%>
+		<%# host_index = hosts_s.index(e) %>
+		<%# hosts_s[host_index] = name %>
+	<%# end %>
+<%# end %>
+
+<center>
+<div id="texts">
+<h1 align="center"><%= "Usage of devices in #{@filename}" %></h1>
+</div>
+
+<div id="rcorners2">
+<% @list = hosts.zip(usage) %>
+<div id="boxes"><%= "Recieved"%></div>
+<%= bar_chart @list, colors: ["#32cd32"] %>
+</div>
+<br>
+<br>
+<div id="rcorners2">
+<div id="boxes"><%= "Sent"%></div>
+<% @list2 = hosts_s.zip(usage_s) %>
+<%= bar_chart @list2, colors: ["#32cd32"] %>
+</div>
+<br>
+<br>
+
+<div id="boxes"><%= "Protocol"%></div>
+<% @list3 = types.zip(counts) %>
+<%= pie_chart @list3 %>
+<div id="boxes"><%= "Total packets: #{total}"%></div>
+</div>
+
+<div id="texts">
+<h1> Upload another capture </h1>
+</div>
+<div id="texts" align="center">
+<%= form_tag({action: :upload}, multipart: true) do %>
+	<%= file_field_tag 'filename' %>
+	<%= submit_tag("Upload") %>
+	<% end %>
+</div>
+
+</center>

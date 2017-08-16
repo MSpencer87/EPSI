@@ -1,0 +1,310 @@
+<title>WebSec</title>
+<head> Hello from WebSec </head>
+<br>
+<%= `date` %>
+<% require 'nmap/program' %>
+
+<% Nmap::Program.sudo_scan do |nmap| %>
+<%  nmap.syn_scan = false %>
+<%  nmap.service_scan = false %>
+<%  nmap.os_fingerprint = false %>
+<%  nmap.xml = 'scan.xml' %>
+<%  nmap.verbose = true %>
+<%  nmap.ports = [20,21,22,23,25,80,110,443,512,522,8080,1080] %>
+<%  nmap.targets = '10.0.0.*' %>
+<%end%>
+
+<% require 'nmap/xml' %>
+<% require 'mac_vendor' %>
+
+<table>
+<th>NMAP SCAN</th>
+<% Nmap::XML.new('scan.xml') do |xml| %>
+	<% xml.each_host do |host| %>
+    	<% if host.ports.empty? == false %>
+    		<tr><table>
+			<tr><td> IP:<%= host.ip %> </td>
+			<% if host.mac.nil? == false %>
+				<tr><td> MAC:<%= host.mac %> </td>
+			<% else %>
+				<tr><td> THIS IS YOUR DEVICE </td>
+			<% end %>
+
+			<% if host.mac.nil? == false %>
+				<% name = %x[curl https://mac-to-vendor.herokuapp.com/#{host.mac}] %>
+			<td><%= name %></td></tr>
+			</table></tr>
+			<hr>
+			<% end %>
+		<% end %>
+ 	<%end%>
+<%end%>
+</table>
+</html>
+
+
+
+<title>WebSec</title>
+<head> Hello from WebSec </head>
+<br>
+<%= `date` %>
+<% require 'nmap/program' %>
+
+<% Nmap::Program.sudo_scan do |nmap| %>
+<%  nmap.syn_scan = false %>
+<%  nmap.service_scan = false %>
+<%  nmap.os_fingerprint = false %>
+<%  nmap.xml = 'scan.xml' %>
+<%  nmap.verbose = true %>
+<%  nmap.ports = [20,21,22,23,25,80,110,443,512,522,8080,1080] %>
+<%  nmap.targets = '10.0.0.*' %>
+<%end%>
+
+<% require 'nmap/xml' %>
+<% require 'mac_vendor' %>
+
+<table>
+<th>NMAP SCAN</th>
+<% Nmap::XML.new('scan.xml') do |xml| %>
+	<% xml.each_host do |host| %>
+    	<% if host.ports.empty? == false %>
+    		<tr><table>
+			<tr><td> IP:<%= host.ip %> </td>
+			<% if host.mac.nil? == false %>
+				<tr><td> MAC:<%= host.mac %> </td>
+			<% else %>
+				<tr><td> localhost </td>
+			<% end %>
+
+			<% if host.mac.nil? == false %>
+				<% name = %x[curl https://mac-to-vendor.herokuapp.com/#{host.mac}] %>
+			<td><%= name %></td></tr>
+			</table></tr>
+			<hr>
+			<% end %>
+		<% end %>
+ 	<%end%>
+<%end%>
+</table>
+</html>
+
+
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<a href="
+
+
+
+"></a>
+
+
+<html>
+<style>
+table {
+   box-shadow: 5px 5px 5px #999;
+   font-family: "Comic Sans MS", cursive, sans-serif;
+   text-align: center;
+}
+
+#texts {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	text-align: left;
+	text-shadow: 1px 1px #999;	
+	color: #32cd32;
+}
+
+#rcorners2 {
+    border-radius: 25px;
+    border: 3px solid #32cd32;
+    padding: 20px; 
+    width: 200px;
+    height: 150px; 
+    display: inline-block;
+}
+
+#spacer {
+	padding: 10px;
+	display: inline-block;
+}
+</style>
+
+<%= `date` %>
+<br>
+
+<% require 'nmap/program' %>
+	<% Nmap::Program.sudo_scan do |nmap| %>
+	<%  nmap.syn_scan = false %>
+	<%  nmap.service_scan = false %>
+	<%  nmap.os_fingerprint = false %>
+	<%  nmap.xml = 'scan.xml' %>
+	<%  nmap.verbose = true %>
+	<%  nmap.ports = [22,80] %>
+	<%  nmap.targets = '10.0.0.*' %>
+	<%end%>
+	
+<% require 'nmap/xml' %>
+<% require 'mac_vendor' %>
+
+<div id="texts">
+<h1> Your connected devices: </h1>
+</div>
+
+<center>
+<% Nmap::XML.new('scan.xml') do |xml| %>
+	<% xml.each_host do |host| %>
+    	<% if host.ports.empty? == false && host.mac.nil? == false %>
+    		<div id="spacer">
+    		<table id="rcorners2"> 
+			<tr><td> <%= host.ip %> </td></tr>
+			<tr><td> MAC:<%= host.mac %> </td></tr>
+			<% if host.mac.nil? == false %>
+				<% name = %x[curl https://mac-to-vendor.herokuapp.com/#{host.mac}] %>
+			<tr><td><%= name %></td></tr>
+			</table>
+			</div>
+			<% end %>
+		<% end %>
+ 	<%end%>
+<%end%>
+</center>
+
+
+		require 'nmap/xml'
+		require 'mac_vendor'
+
+		Nmap::XML.new('scan.xml') do |xml|
+			xml.each_host do |host|
+    			if host.ports.empty? == false && host.mac.nil? == false
+    				host.ip
+					host.mac
+					if host.mac.nil? == false
+						name = %x[curl https://mac-to-vendor.herokuapp.com/#{host.mac}]
+						name
+					end
+				end
+ 			end
+		end
+
+
+
+
+		require 'pcaprub'
+
+file = ARGV[1] || "pcap-000"
+capture = PCAPRUB::Pcap.open_offline(ARGV[0])
+
+capture.each_packet do |packet|
+  file1 = file.succ!
+  
+  puts packet
+
+
+
+
+
+
+
+
+
+require 'rubygems'
+require 'packetfu'
+
+# Set interface (Default: en0)
+iface = ARGV[0] || "wlan1"
+
+cap = PacketFu::Capture.new(:iface => iface, :start => true, :promisc => true)
+cap.stream.each do |p|
+  pkt = PacketFu::Packet.parse(p)
+  if pkt.is_ip? and pkt.is_tcp? 
+    if pkt.tcp_flags.syn == 1 and pkt.tcp_flags.ack == 0
+      print "Source Addr: #{pkt.ip_saddr}\n"
+      print "Destination Addr: #{pkt.ip_daddr}\n"
+      print "Destination Port: #{pkt.tcp_dport}\n"
+      print "TCP Options: #{pkt.tcp_options}\n"
+      print "TCP SYN?: #{pkt.tcp_flags.syn}\n"
+      print "TCP ACK?: #{pkt.tcp_flags.ack}\n"
+    end
+  end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  require 'packetfu'
+
+pcap_filename = ARGV[0].chomp
+
+unless File.exists?(pcap_filename)
+  puts "PCAP input file #{pcap_filename} could not be found"
+end
+
+puts "Reading PCAP to packet array from #{File.expand_path(pcap_filename)}"
+packet_array = PacketFu::PcapFile.file_to_array(pcap_filename)
+
+packet_array.each do |pkt|
+  packet = PacketFu::Packet.parse(pkt)
+	
+  # Do some stuff here (really any thing you want)
+  #puts packet.class 
+  puts packet.peek
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # Do some stuff here (really any thing you want)
+	if(packet.class != InvalidPacket)
+		if packet.is_ip?
+			next if packet.ip_saddr == Utils.ifconfig(iface)[:ip_saddr]
+				packet_info = [packet.ip_saddr, packet.ip_daddr, packet.size, packet.proto.last]
+				print num
+				puts ". %-15s -> %-15s %-4d %s" % packet_info
+				num = num + 1
+			end
+		if !packet.is_ip?
+			packet_info = [packet.eth_saddr, packet.eth_daddr, packet.size, packet.proto.last]
+			print num 
+			puts ". %-15s -> %-15s %-4d %s" % packet_info
+			num = num + 1
+		end
+	else
+		print num
+		print ". "
+		print packet.size
+		print " "
+		print packet.class
+		print "\n"
+		num = num + 1
+	end

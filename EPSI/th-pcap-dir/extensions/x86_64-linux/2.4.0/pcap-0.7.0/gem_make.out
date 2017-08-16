@@ -1,0 +1,39 @@
+current directory: /home/michael/websec/websec/th-pcap-dir/gems/pcap-0.7.0/ext
+/home/michael/.rvm/rubies/ruby-2.4.0/bin/ruby -r ./siteconf20170507-27979-1t8a2g2.rb extconf.rb
+checking for socket() in -lsocket... no
+checking for gethostbyname() in -lxnet... no
+checking for hstrerror()... yes
+checking for pcap.h... no
+*** extconf.rb failed ***
+Could not create Makefile due to some reason, probably lack of necessary
+libraries and/or headers.  Check the mkmf.log file for more details.  You may
+need configuration options.
+
+Provided configuration options:
+	--with-opt-dir
+	--without-opt-dir
+	--with-opt-include
+	--without-opt-include=${opt-dir}/include
+	--with-opt-lib
+	--without-opt-lib=${opt-dir}/lib
+	--with-make-prog
+	--without-make-prog
+	--srcdir=.
+	--curdir
+	--ruby=/home/michael/.rvm/rubies/ruby-2.4.0/bin/$(RUBY_BASE_NAME)
+	--with-pcap-dir
+	--without-pcap-dir
+	--with-pcap-includedir
+	--without-pcap-includedir
+	--with-pcap-libdir
+	--without-pcap-libdir
+	--with-socketlib
+	--without-socketlib
+	--with-xnetlib
+	--without-xnetlib
+
+To see why this extension failed to compile, please check the mkmf.log which can be found here:
+
+  /home/michael/websec/websec/th-pcap-dir/extensions/x86_64-linux/2.4.0/pcap-0.7.0/mkmf.log
+
+extconf failed, exit code 1

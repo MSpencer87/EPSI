@@ -1,0 +1,80 @@
+
+
+
+
+<% path = Rails.root.join('public', "#{@filename}") %>
+<% num = 1 %>
+<% @packet_array = PacketFu::PcapFile.file_to_array(path) %>
+
+<% @packet_array.each do |pkt| %>
+	<% @packet = PacketFu::Packet.parse(pkt) %>
+	<% if(@packet.class != InvalidPacket) %>
+		<% if @packet.is_ip? %>
+			<% @packet_info = [@packet.ip_saddr, @packet.ip_daddr, @packet.size, @packet.proto.last] %>
+			<%= num %>
+			<%= ". %-15s -> %-15s %-4d %s" % @packet_info %>
+			<% num = num + 1 %>
+			<br>
+		<% else %>
+			<% @packet_info = [@packet.eth_saddr, @packet.eth_daddr, @packet.size, @packet.proto.last] %>
+			<%= num %>
+			<%= ". %-15s -> %-15s %-4d %s" % @packet_info %>
+			<% num = num + 1 %>
+			<br>
+		<% end %>
+	<% else %>
+		<%= num %>
+		<% sniff = @packet.peek %>
+		<% @packet_info = [sniff[20..21], sniff[22..23], sniff[24..25], sniff[26..27], sniff[28..29], sniff[30..31], sniff[8..9], sniff[10..11], sniff[12..13], sniff[14..15], sniff[16..17], sniff[18..19], @packet.size, sniff[0]] %>
+		<%= ". %-2s:%-2s:%-2s:%-2s:%-2s:%-2s -> %-2s:%-2s:%-2s:%-2s:%-2s:%-2s %-4d %s" % @packet_info %>
+		<% num = num + 1 %>
+		<br>
+	<% end %>
+<% end %>
+
+
+
+<br>
+<div id="texts">
+<h1> Scan your local subnet </h1>
+</div>
+<div id="texts" align="center">
+<%= form_tag(ipaddr_path, method: "get") do %>
+	<%= label_tag(:ipaddr, "Enter Address Range (10.0.0.*) ") %>
+	<%= text_field_tag(:ipaddr) %>
+	<%= submit_tag("Scan") %>
+	<% end %>
+</div>
+
+<div id="texts">
+<h1> Perfect your password </h1>
+</div>
+<div id="texts" align="center">
+<%= form_tag(pword_path, method: "get") do %>
+	<%= label_tag(:pword, "Enter your old password ") %>
+	<%= text_field_tag(:pword) %>
+	<%= submit_tag("Improve it!") %>
+	<% end %>
+</div>
+
+<div id="texts">
+<h1> Upload a capture </h1>
+</div>
+<div id="texts" align="center">
+<%= form_tag({action: :upload}, multipart: true) do %>
+	<%= file_field_tag 'filename' %>
+	<%= submit_tag("Upload") %>
+	<% end %>
+</div>
+
+
+<div id="texts">
+<h1> Sniff for packets </h1>
+</div>
+<div id="texts" align="center">
+<%= form_tag(iface_path, method: "get") do %>
+	<%= label_tag(:iface, "Enter a Network Interface (wlan1)") %>
+	<%= text_field_tag(:iface_path) %>
+	<%= submit_tag("Sniff") %>
+	<% end %>
+</div>

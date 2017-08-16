@@ -1,0 +1,72 @@
+<html>
+<style>
+table {
+   box-shadow: 5px 5px 5px #999;
+   font-family: "Comic Sans MS", cursive, sans-serif;
+   text-align: center;
+}
+
+#texts {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	text-align: left;
+	text-shadow: 1px 1px #999;	
+	color: #32cd32;
+}
+
+#rcorners2 {
+    border-radius: 25px;
+    border: 3px solid #32cd32;
+    padding: 20px; 
+    width: 200px;
+    height: 150px; 
+    display: inline-block;
+}
+
+#spacer {
+	padding: 10px;
+	display: inline-block;
+}
+</style>
+
+<%= `date` %>
+<br>
+
+	
+<% require 'nmap/xml' %>
+<% require 'mac_vendor' %>
+
+<div id="texts">
+<h1 align="center"><%= "Connected devices on #{@ipaddress}" %></h1>
+</div>
+<center>
+<% Nmap::XML.new('scan.xml') do |xml| %>
+	<% xml.each_host do |host| %>
+    	<% if host.ports.empty? == false && host.mac.nil? == false %>
+    		<div id="spacer">
+    		<table id="rcorners2"> 
+			<tr><td> <%= host.ip %> </td></tr>
+			<tr><td> MAC:<%= host.mac %> </td></tr>
+			<% if host.mac.nil? == false %>
+				<% name = %x[curl https://mac-to-vendor.herokuapp.com/#{host.mac}] %>
+			<tr><td><%= name %></td></tr>
+			</table>
+			</div>
+			<% end %>
+		<% end %>
+ 	<%end%>
+<%end%>
+</center>
+
+<div id="texts">
+<h1 align="center"> Scan another local subnet </h1>
+</div>
+
+<div id="texts">
+<div align="center">
+<%= form_tag(ipaddr_path, method: "get") do %>
+	<%= label_tag(:ipaddr, "Enter Address Range (10.0.0.*) ") %>
+	<%= text_field_tag(:ipaddr) %>
+	<%= submit_tag("Scan") %>
+	<% end %>
+</div>
+</div>

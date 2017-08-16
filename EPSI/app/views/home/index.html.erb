@@ -1,0 +1,121 @@
+<html>
+<style>
+table {
+	border-collapse: separate;
+}
+
+h3 {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+		text-shadow: 1px 1px #999;	
+
+}
+
+#boxes {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  color: #001111;
+  font-size: 80%;
+}
+
+.button{
+  color: #001111;
+  width: 80%;
+  height: 30px;
+  border: 1px solid;
+  border-radius: 7px;
+  background-color: #32cd32;
+  color: #FFFFFF;
+
+
+}
+
+#cboxes {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  color: #001111;
+  font-size: 60%;
+}
+
+td {
+	margin: 10px 10px 10px 10px;
+}
+
+#texts {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	text-shadow: 1px 1px #999;	
+	color: #32cd32;
+}
+
+#rcorners2 {
+	box-shadow: 5px 5px 5px #999;
+    text-align: center;
+	font-family: "Comic Sans MS", cursive, sans-serif;
+    border-radius: 25px;
+    border: 3px solid #32cd32;
+    padding: 20px; 
+    width: 200px;
+    height: 150px; 
+    display: inline-block;
+}
+
+#spacer {
+	padding: 10px 100px 200px 200px;
+	display: inline-block;
+}
+</style>
+
+<center>
+<div id ="texts"> <h1> Easy-Passive-Security-Interface <h1> </div>
+
+<% default = "10.0.0.*" %>
+<table><tr> 
+<td id="rcorners2" ><h3>Scan</h3> 
+<div id="boxes" align="center">
+<%= form_tag(ipaddr_path, method: "get") do %>
+	<%= label_tag(:ipaddr, "Enter address range") %>
+	<%= text_field_tag(:ipaddr, "ex: #{default}") %>
+	<br><br><br>
+	<%= submit_tag("Find Devices", :class => "button") %>
+	<% end %>
+</div></td>
+
+<td id="rcorners2"><h3>Analyze</h3> 
+<div id="boxes" align="center">
+<%= form_tag({action: :upload}, multipart: true) do %>
+	<%= label_tag(:upload, "Upload a file .pcap") %>
+	<%= file_field_tag 'filename' %>
+	<br><br><br>
+	<%= submit_tag("Upload .pcap", :class => "button") %>
+	<% end %>
+</div></td> 
+
+<td id="rcorners2"><h3>Capture</h3>
+<div id="boxes" align="center">
+<%= form_tag(iface_path, method: "get") do %>
+	<%= label_tag(:iface, "Enter a network interface") %>
+	<%= text_field_tag(:iface_path, "ex: wlan1") %>
+	<br><br><br>
+	<%= submit_tag("Sniff Network", :class => "button") %>
+	<% end %>
+ </div></td>
+
+<td id="rcorners2"><h3>Improve</h3>
+<div id="boxes" align="center">
+<%= form_tag(pword_path, method: "get") do %>
+	<%= label_tag(:pword, "Enter your old password") %>
+	<%= text_field_tag(:pword) %>
+	<div id="cboxes">
+	<%= check_box_tag 'c0', 1, true  %>
+	<%= label_tag 'Upper Case' %>
+	<%= check_box_tag 'c1', 1, true  %>
+	<%= label_tag 'Digits' %>
+	<%= check_box_tag 'c2', 1, true %>
+	<%= label_tag 'Special' %>
+	</div>
+	<br>
+	<%= submit_tag("Generate Password", :class => "button") %>
+	<% end %>
+</div></td> 
+
+</tr></table>
+</center>
+
+</html>

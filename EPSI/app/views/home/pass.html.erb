@@ -1,0 +1,84 @@
+<html>
+
+<style>
+
+body {
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+#texts {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	text-shadow: 1px 1px #999;	
+	color: #32cd32;
+}
+
+#boxes {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  color: #000000;
+  font-size: 60%;
+}
+
+#rcorners2 {
+    border-radius: 25px;
+    border: 3px solid #32cd32;
+    padding: 20px; 
+    width: 200px;
+    display: inline-block;
+    vertical-align: center;
+    box-shadow: 5px 5px 5px #999;
+}
+
+#spacer {
+  padding: 10px 10px 10px 10px;
+  display: inline-block;
+  vertical-align: center;
+
+}
+</style>
+
+<center>
+<div id="texts" align="center">
+<h1> Perfect your password </h1>
+</div>
+<div id="texts" align="center">
+<%= form_tag(pword_path, method: "get") do %>
+  <%= label_tag(:pword, "Enter your old password ") %>
+  <%= text_field_tag(:pword) %>
+  <%= submit_tag("Improve it!") %>
+  <br>
+
+  <div id="boxes">
+  <%= check_box_tag 'c0', 1, true  %>
+  <%= label_tag 'Upper Case' %>
+  <%= check_box_tag 'c1', 1, true  %>
+  <%= label_tag 'Digits' %>
+  <%= check_box_tag 'c2', 1, true %>
+  <%= label_tag 'Special Char' %>
+  <%#= check_box_tag 'c3', 1, true %>
+  <%#= label_tag 'No Spaces' %>
+  <%#= check_box_tag 'c4', 1, true  %>
+  <%#= label_tag 'Length 8' %>
+  </div>
+
+  <% end %>
+</div>
+
+<div id="texts" align="center">
+<h1> New password </h1>
+</div>
+<div id="rcorners2">
+<div id="spacer">
+<table id="rcorners">
+  <td><%= "#{@password}" %></td>
+</table>
+</div>
+</div>
+
+
+<div id="texts" align="center">
+<h1> Not satisfied? Try again </h1>
+</div>
+</center>
+
+
